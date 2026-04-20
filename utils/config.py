@@ -28,6 +28,17 @@ class Settings(BaseSettings):
     # ── Database ──────────────────────────────────────────────────────────────
     DATABASE_URL: str = "postgresql+asyncpg://infraguard:infraguard_secret@localhost:5432/infraguard"
     POSTGRES_PASSWORD: str = "infraguard_secret"
+
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def fix_database_url(cls, v: str) -> str:
+        """Railway gives postgresql:// or postgres:// — asyncpg needs postgresql+asyncpg://"""
+        if v.startswith("postgres://"):
+            v = v.replace("postgres://", "postgresql+asyncpg://", 1)
+        elif v.startswith("postgresql://"):
+            v = v.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return v
+
     REDIS_URL: str = "redis://localhost:6379"
     REDIS_TTL_TRAFFIC: int = 300       # 5 minutes
     REDIS_TTL_AQI: int = 600           # 10 minutes

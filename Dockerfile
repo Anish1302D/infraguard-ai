@@ -1,8 +1,8 @@
-FROM python:3.13-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# System dependencies for OpenCV and build tools
+# System dependencies for OpenCV
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     build-essential \
@@ -10,15 +10,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements-py313.txt .
+# Install Python dependencies (CPU-only torch for smaller image)
+COPY requirements-production.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements-py313.txt
+    pip install --no-cache-dir -r requirements-production.txt
 
 # Copy application
 COPY . .
 
-# Create log directory and ensure weights dir exists
+# Create log directory
 RUN mkdir -p logs ml/weights
 
 # Non-root user for security

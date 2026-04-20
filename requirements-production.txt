@@ -1,0 +1,49 @@
+# InfraGuard AI – Production Requirements (Railway / Cloud deployment)
+# Uses CPU-only PyTorch to keep image size manageable (~800MB vs ~3GB)
+
+# ── Core API ─────────────────────────────────────────────────────
+fastapi
+uvicorn[standard]
+python-multipart
+websockets
+
+# ── Data validation ──────────────────────────────────────────────
+pydantic
+pydantic-settings
+
+# ── HTTP client ──────────────────────────────────────────────────
+httpx[http2]
+
+# ── Cache / DB ───────────────────────────────────────────────────
+aioredis
+asyncpg
+sqlalchemy[asyncio]
+alembic
+
+# ── Data science ─────────────────────────────────────────────────
+numpy
+pandas
+scikit-learn
+xgboost
+scipy
+
+# ── Image processing ─────────────────────────────────────────────
+Pillow
+opencv-python-headless
+
+# ── ML: CPU-only PyTorch + YOLO (much smaller than GPU build) ────
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+torchvision
+ultralytics
+pyyaml
+
+# ── Utilities ────────────────────────────────────────────────────
+python-dotenv
+orjson
+anyio
+tenacity
+
+# ── Auth ─────────────────────────────────────────────────────────
+python-jose[cryptography]
+passlib[bcrypt]

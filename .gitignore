@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+venv_final/
+venv_new/
+venv_new_2/
+.venv/
+env/
+
+# Environment variables — NEVER commit secrets
+.env
+
+# Logs
+logs/
+*.log
+
+# Training data — too large for GitHub (thousands of images)
+# Only the trained model weights (ml/weights/pothole_yolo.pt) are kept
+data/pothole_yolo/train/
+data/pothole_yolo/valid/
+data/synthetic/
+data/eval/
+
+# Database
+*.db
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing / coverage
+.coverage
+htmlcov/
+.pytest_cache/

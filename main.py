@@ -31,16 +31,27 @@ from utils.config import settings
 from ml.model import InfraGuardModel
 
 # ── Logging ───────────────────────────────────────────────────────────────────
+def _get_file_handler():
+    log_file = settings.LOG_FILE
+    if not log_file:
+        return logging.NullHandler()
+    try:
+        os.makedirs(os.path.dirname(log_file) if os.path.dirname(log_file) else ".", exist_ok=True)
+        return logging.handlers.RotatingFileHandler(
+            log_file, maxBytes=10_485_760, backupCount=5
+        )
+    except Exception:
+        return logging.NullHandler()
+
 logging.basicConfig(
     level=getattr(logging, settings.LOG_LEVEL, logging.INFO),
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
     handlers=[
         logging.StreamHandler(),
-        logging.handlers.RotatingFileHandler(
-            settings.LOG_FILE, maxBytes=10_485_760, backupCount=5
-        ) if settings.LOG_FILE else logging.NullHandler(),
+        _get_file_handler(),
     ],
 )
+
 logger = logging.getLogger("infraguard")
 
 # ── Startup / Shutdown ────────────────────────────────────────────────────────

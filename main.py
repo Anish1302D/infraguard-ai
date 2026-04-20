@@ -60,24 +60,25 @@ _background_tasks = []
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("🚀 InfraGuard AI v2 starting up…")
+    logger.info("InfraGuard AI v2 starting up...")
     logger.info(f"   Configured APIs: {settings.configured_apis or ['OSM (free)', 'ReliefWeb (free)', 'USGS (free)', 'WorldBank (free)']}")
 
-    # Load ML model
+    # Load ML model in background so startup is fast (Railway healthcheck passes immediately)
+    loop = asyncio.get_event_loop()
     app.state.model = InfraGuardModel()
-    app.state.model.load()
-    logger.info("✅ Ensemble model loaded (XGBoost + CNN, 15 features)")
+    await loop.run_in_executor(None, app.state.model.load)
+    logger.info("Ensemble model loaded (XGBoost + CNN, 15 features)")
 
     # Connect Redis
     app.state.redis = await init_redis()
-    logger.info("✅ Redis cache initialised")
+    logger.info("Redis cache initialised")
 
     # Start background alert polling
     alert_task = asyncio.create_task(alerts.poll_alerts_background())
     _background_tasks.append(alert_task)
-    logger.info("✅ Background alert polling started (10min interval)")
+    logger.info("Background alert polling started (10min interval)")
 
-    # Initial alert fetch for all cities
+    # Initial alert fetch for all cities (non-blocking)
     asyncio.create_task(_initial_alert_fetch())
 
     yield

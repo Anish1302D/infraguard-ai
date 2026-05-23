@@ -1257,22 +1257,27 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 6px 4px;
-        font-size: 10px;
-        font-weight: 500;
+        padding: 8px 4px;
+        font-size: 11px;
+        font-weight: 600;
         border-radius: 8px;
         gap: 4px;
-        color: var(--muted);
+        color: #8fa0b0; /* High-contrast text for dark mode mobile readability */
+        transition: all 0.2s ease;
       }
 
       .nav-tab.active {
-        background: rgba(0, 200, 255, 0.08);
-        color: var(--accent);
+        background: rgba(0, 200, 255, 0.14) !important;
+        color: #fff !important;
+        text-shadow: 0 0 8px rgba(0, 200, 255, 0.5);
+        border-top: 2px solid var(--accent);
+        border-radius: 0 0 8px 8px;
       }
       
       .nav-tab-icon {
         display: inline-block;
-        font-size: 18px;
+        font-size: 20px; /* Enhanced icon size for mobile touch targets */
+        margin-bottom: 1px;
       }
 
       /* Add space at the bottom of the body so bottom nav doesn't hide content */

@@ -3016,8 +3016,27 @@
             clearInterval(progTimer);
             if (progEl) progEl.textContent = '100%';
 
-            const detectedType = classified.type;
+             const detectedType = classified.type;
             const confidence = classified.confidence.toFixed(0);
+            
+            // Validate that the image contains roads, bridges, or pipelines
+            const isRoad = detectedType === 'road';
+            const isBridge = detectedType === 'bridge';
+            const isPipeline = detectedType === 'pipeline';
+            
+            const fn = file.name.toLowerCase();
+            const containsRejected = REJECTED_KEYWORDS.some(k => fn.includes(k));
+
+            if (!isRoad && !isBridge && !isPipeline || containsRejected) {
+              detectionBanner.style.display = 'none';
+              errorBanner.style.display = 'block';
+              errorBanner.innerHTML = `❌ Invalid Image: AI can't detect roads, bridges, or pipelines in this image. Please upload a clear image of a road, bridge, or pipeline.`;
+              
+              // Clear file input so it can be uploaded again
+              document.getElementById('fileInput').value = '';
+              return;
+            }
+
             const typeInfo = INFRA_TYPES_DETECT.find(t => t.type === detectedType);
 
             detectionBanner.style.background = 'rgba(0,200,255,0.08)';
